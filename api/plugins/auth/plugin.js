@@ -1,20 +1,24 @@
+var session = require('eqstock').session.remand
+
 exports.init = function(plugin, options, next) {
-  // plugin.dependency('a')
+  plugin.dependency('equipp-session')
 
   var auth = {
     start: startFn,
   }
 
-  plugin.pre(startFn)
+  plugin.pre([{'a2': startFn}])
 
   plugin.route({
     path: '/admin',
     method: "GET",
     pre: [
-      {'auth' : auth.start}
+      {'session' : session}
     ],
     handler: function(request, reply) {
-      // request.session.set('a', {once: 'hi'})
+      var cookies = request.cookies
+      cookies.set('testkey1', 'val2')
+      request.session.set('a', {once: 'hi2'})
       reply("This is a AUTHAUTH from a route defined in my plugin!");
     }
   });

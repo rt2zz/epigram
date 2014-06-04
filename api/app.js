@@ -1,14 +1,15 @@
-var Equip = require('equipp')
+var Eqi = require('eqi')
+var eqstock = require('eqstock')
 
 var tlsConfig = require('./tls/config.js')
 
-var server = Equip.createServer(4002).tls(tlsConfig)
+var server = Eqi.createServer(4002).tls(tlsConfig)
 
-server.extend('equipp-router')
+server.extend(require('eqrouter'))
+server.extend(eqstock.session, {keys: ['key1', 'key2']})
 
-// server.plugin('auth')
+server.plugin(require('./plugins/auth'))
 
 server.start(function(){
-  console.log(__dirname)
   console.log('server started')
 })
