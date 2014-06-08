@@ -1,15 +1,15 @@
-var Eqi = require('eqi')
-var eqstock = require('eqstock')
+var server = require('./server/server.js')
 
+server.plugin(require('./plugins/user'))
 var tlsConfig = require('./tls/config.js')
 
-var server = Eqi.createServer(4002).tls(tlsConfig)
+server.pipeline('postRequest', {stuff: function(request, remand){
+    console.log('postReq')
+    remand('stuff')
+    }
+  }
+)
 
-server.extend(require('eqrouter'))
-server.extend(eqstock.session, {keys: ['key1', 'key2']})
-
-server.plugin(require('./plugins/auth'))
-
-server.start(function(){
+server.port(4002).tls(tlsConfig).start(function(){
   console.log('server started')
 })

@@ -1,29 +1,57 @@
-exports.init = function(plugin, options, next) {
-  // plugin.dependency('a')
+var Account = require('./account.model.js')
 
-  var auth = {
-    start: startFn,
-  }
+exports.plugin = function(plugin, options, next) {
+  // plugin.service('Account', account)
+  console.log('inplugin')
+  next();
+};
 
-  plugin.pre(startFn)
+exports.route = function(plugin, options, next){
+  console.log('in routes')
+  plugin.preHandler({'a2': startFn})
 
   plugin.route({
     path: '/admin',
     method: "GET",
-    pre: [
-      {'auth' : auth.start}
-    ],
+    auth: 'required',
+    preHandler: {
+           tester : function(request, remand){
+             console.log('TEST REMAND')
+             remand(true)
+           }
+          },
     handler: function(request, reply) {
-      // request.session.set('a', {once: 'hi'})
+      var cookies = request.getCookies()
+      cookies.set('testkey1', 'val3')
+      request.session.set('a', {once: 'hi3'})
       reply("This is a AUTHAUTH from a route defined in my plugin!");
     }
+  })
+  plugin.route({
+    path: '/login',
+    method: "GET",
+    auth: 'none',
+    preHandler: {
+           tester : function(request, remand){
+             console.log('TEST login')
+             remand(true)
+           }
+          },
+    handler: function(request, reply) {
+      login(request, {eg: 'data'})
+      reply("You just logged in!");
+    }
+
   });
-
-  plugin.share('auth', auth)
-
-  next();
-};
+  next()
+}
 
 function startFn(request, remand){
-  remand(null)
+  console.log('startfn')
+  remand('start')
+}
+
+function login(request, account){
+  var session = request.getSession()
+  session.set('user', account)
 }
