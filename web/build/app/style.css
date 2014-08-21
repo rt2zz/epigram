@@ -1,0 +1,19 @@
+#helm {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 200px;
+  height: 100%;
+}
+
+[role=main] {
+  margin-left: 200px;
+}
+
+#helm {
+  background: #efe;
+}
+
+body {
+  margin: 0;
+}

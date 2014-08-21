@@ -1,34 +1,61 @@
-var $ = require('jquery')
+/*global me, app*/
+var Router = require('ampersand-router');
+var app = require('./app.js')
+var HomePage = require('./components/sandbox/home.js');
+var TestPage = require('./components/sandbox/test.js')
+var RegisterPage = require('./components/auth/register.view.js')
+// var CollectionDemo = require('./pages/collection-demo');
+// var InfoPage = require('./pages/info');
+// var PersonAddPage = require('./pages/person-add');
+// var PersonEditPage = require('./pages/person-edit');
+// var PersonViewPage = require('./pages/person-view');
 
-var mapleTree = require('mapleTree')
-router = new mapleTree.RouteTree({fifo: false})
 
-$(document).ready(function(){
-  $('body').on('click', 'a', function(e){
-    route($(this).attr('href'))
-    e.preventDefault()
-  })
-})
+module.exports = Router.extend({
+    routes: {
+        '': 'home',
+        'test': 'test',
+        'register': 'register'
+    },
 
-var Router = {}
+    // ------- ROUTE HANDLERS ---------
+    home: function () {
+      console.log('home', HomePage, app.setPage)
+      app.setPage(new HomePage())
+    },
 
-Router.goto = function(uri){
-  history.pushState(null, '', uri)
-  var match = router.match(uri)
-  if(typeof match.fn != 'undefined') match.fn()
-  else fourofour()
-}
+    test: function () {
+      console.log('test')
+      app.setPage(new TestPage())
+    },
 
-Router.route = router.define
+    register: function () {
+      app.setPage(new RegisterPage({email: 'testemail'}))
+    },
+    //
+    // info: function () {
+    //     this.trigger('newPage', new InfoPage({
+    //         model: me
+    //     }));
+    // },
+    //
+    // personAdd: function () {
+    //     this.trigger('newPage', new PersonAddPage());
+    // },
+    //
+    // personEdit: function (id) {
+    //     this.trigger('newPage', new PersonEditPage({
+    //         id: id
+    //     }));
+    // },
+    //
+    // personView: function (id) {
+    //     this.trigger('newPage', new PersonViewPage({
+    //         id: id
+    //     }));
+    // },
 
-router.define('/', function(){
-  console.log('TTTT')
-})
-
-Router.router = router
-
-module.exports = Router
-
-function fourofour(){
-  $('#main').html('404!')
-}
+    // catchAll: function () {
+    //     this.redirectTo('');
+    // }
+});

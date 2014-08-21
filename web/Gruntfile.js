@@ -27,13 +27,27 @@ module.exports = function (grunt) {
         }
       }
     },
+    styl: {
+      dist: {
+        options: {
+          whitespace: true
+        },
+        files: {
+            'build/app/style.css': 'app/styles/*.styl'
+        }
+      }
+    },
     watch: {
       scripts: {
         files: ['app/app.js', 'app/**/*.hbs', 'app/**/*.js'],
         tasks: ['browserify']
+      },
+      css: {
+        files: ['app/**/*.styl'],
+        tasks: ['styl']
       }
     }
   });
 
-  grunt.registerTask('default', ['browserify', 'symlink', 'watch']);
+  grunt.registerTask('default', ['browserify', 'symlink', 'styl', 'watch']);
 };
